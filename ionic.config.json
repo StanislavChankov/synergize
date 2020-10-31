@@ -1,0 +1,7 @@
+{
+  "name": "fixie",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
