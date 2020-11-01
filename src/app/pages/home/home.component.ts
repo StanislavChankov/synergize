@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { MenuInteractionActions } from '../../core/store/actions';
+import { AppState } from '../../core/store/state/app.state';
 
 @Component({
 	selector: 'app-home',
@@ -11,13 +14,13 @@ export class HomeComponent implements OnInit {
 	public folder: string;
 	constructor(
 		private activatedRoute: ActivatedRoute,
-		private router: Router) { }
+		protected store$: Store<AppState>) { }
 
 	ngOnInit() {
 		this.folder = this.activatedRoute.snapshot.paramMap.get('id');
 	}
 
 	public onStartGameClicked(): void {
-		this.router.navigateByUrl('/game');
+		this.store$.dispatch(new MenuInteractionActions.StartGameClickedAction({}));
 	}
 }
