@@ -37,14 +37,14 @@ private light: Light;
 		private store$: Store<AppState>,
 		private windowRef: WindowRefService
 	) {
-			this.store$
-				.select(selectCanvas)
-				.subscribe(canvas => {
-					debugger;
-					if (canvas) {
-						this.canvas = canvas.nativeElement;
-					}
-				});
+			// this.store$
+			// 	.select(selectCanvas)
+			// 	.subscribe(canvas => {
+			// 		debugger;
+			// 		if (canvas) {
+			// 			this.canvas = canvas.nativeElement;
+			// 		}
+			// 	});
 	}
 
 	public createPlane(): void {
@@ -53,16 +53,16 @@ private light: Light;
 		plane.position.y = -1;
 	}
 
-	public createScene(canvas: HTMLCanvasElement): void {
+	public createScene(scene: Scene, engine: Engine, canvas: HTMLCanvasElement): void {
 		// // The first step is to get the reference of the canvas element from our HTML document
-		this.canvas = this.canvas;
+		this.canvas = canvas;
 
 		// Then, load the Babylon 3D engine:
-		this.engine = new Engine(this.canvas,  true);
+		this.engine = engine; //new Engine(this.canvas,  true);
 
 		// create a basic BJS Scene object
-		this.scene = new Scene(this.engine);
-		this.scene.clearColor = new Color4(0, 0, 0, 0);
+		this.scene = scene; // new Scene(this.engine);
+		// this.scene.clearColor = new Color4(0, 0, 0, 0);
 
 		// create a FreeCamera, and set its position to (x:5, y:10, z:-20 )
 		this.camera = new FreeCamera('camera1', new Vector3(-20, 15, -20), this.scene);
@@ -101,7 +101,7 @@ private light: Light;
 		// generates the world x-y-z axis for better understanding
 		this.showWorldAxis(8);
 
-		this.store$.dispatch(new SceneActions.CanvasPlaneCreated({}));
+		// this.store$.dispatch(new SceneActions.CanvasPlaneCreated({}));
 	}
 
 	public animate(): void {

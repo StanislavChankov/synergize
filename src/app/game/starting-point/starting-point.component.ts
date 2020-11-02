@@ -4,8 +4,24 @@ import { EngineService } from '../../core/services/engine.service';
 import { AppState } from '../../core/store/state/app.state';
 import { BaseComponent } from '../../components/base.component';
 import { Actions } from '@ngrx/effects';
-import { SceneActions } from '../../core/store/actions';
+import { SceneActions, SceneCreatedPayload } from '../../core/store/actions';
 import { CanvasCreatedPayload } from '../../core/models/events';
+
+import {
+	Engine,
+	FreeCamera,
+	Scene,
+	Light,
+	Mesh,
+	Color3,
+	Color4,
+	Vector3,
+	HemisphericLight,
+	StandardMaterial,
+	Texture,
+	DynamicTexture,
+	MeshBuilder
+} from 'babylonjs';
 
 @Component({
 	selector: 'app-starting-point',
@@ -17,23 +33,28 @@ export class StartingPointComponent extends BaseComponent implements OnInit, Aft
 	private canvas: HTMLCanvasElement;
 	@ViewChild('rendererCanvas') canvasElementRef: ElementRef;
 
-	// public constructor(
-	// 	private store$: Store<AppState>) {
-	// 	// const globalCanvas = document.createElement('canvas');
-	// 	// this.canvas = globalCanvas;
-	// }
-
 	public constructor(
 		private engServ: EngineService,
 		protected store$: Store<AppState>,
 		protected updates$: Actions) {
 		super(store$, updates$);
-}
-	ngAfterViewInit(): void {
-		const payload = { canvasRef: this.canvasElementRef } as CanvasCreatedPayload;
-		this.store$.dispatch(new SceneActions.CanvasCreatedAction(payload));
+	}
 
-		this.engServ.createScene(this.canvas);
+	ngAfterViewInit(): void {
+		this.canvas = this.canvasElementRef.nativeElement;
+
+		const engine = new Engine(this.canvas,  true);
+		const scene = new Scene(engine);
+		scene.clearColor = new Color4(0, 0, 0, 0);
+
+		// const payload = {
+		// 	engine: engine,
+		// 	scene: scene,
+		// 	canvas: this.canvas,
+		// } as SceneCreatedPayload;
+		// this.store$.dispatch(new SceneActions.SceneCreatedAction(payload));
+
+		this.engServ.createScene(scene, engine, this.canvas);
 		this.engServ.animate();
 		this.resizeCanvas();
 	}
@@ -43,16 +64,6 @@ export class StartingPointComponent extends BaseComponent implements OnInit, Aft
 			SceneActions.CANVAS_CREATED,
 			this.onCanvasPlaneCreated
 		);
-
-		// this.engServ.createPlane();
-		// this.canvas.style.backgroundColor = 'black';
-		// const engineWrapper = document.getElementsByClassName('engine-wrapper')[0];
-		// engineWrapper.appendChild(this.canvas);
-
-		// this.engServ.createScene();
-		// this.engServ.animate();
-
-		// this.resizeCanvas();
 	}
 
 	private resizeCanvas() {
@@ -62,8 +73,8 @@ export class StartingPointComponent extends BaseComponent implements OnInit, Aft
 
 	private onCanvasPlaneCreated(): void {
 		debugger;
-		this.engServ.createScene(this.canvas);
-		this.engServ.animate();
-		this.resizeCanvas();
+		// this.engServ.createScene(new Engine(this.canvas,  true));
+		// this.engServ.animate();
+		// this.resizeCanvas();
 	}
 }
