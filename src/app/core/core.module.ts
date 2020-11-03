@@ -21,8 +21,8 @@ import { effects } from './store/effects';
 		StoreModule.forRoot(combinedReducers, {
 			runtimeChecks: {
 				strictStateImmutability: true,
-				strictActionImmutability: true,
-				strictStateSerializability: false,
+				strictActionImmutability: false,
+				strictStateSerializability: true,
 				strictActionSerializability: false,
 				strictActionWithinNgZone: true,
 				strictActionTypeUniqueness: true,

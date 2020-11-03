@@ -1,6 +1,5 @@
-import { Action } from 'babylonjs';
-import { PayloadAction, SceneCreatedPayload } from '..';
 import { CanvasCreatedPayload } from '../../../models/events';
+import { PayloadAction } from '../../models/payload-action';
 
 export namespace SceneActions {
 
@@ -32,22 +31,7 @@ export namespace SceneActions {
 
 	//#endregion
 
-	//#region Scene Created
-
-	export const SCENE_CREATED = 'SCENE_CREATED';
-
-	export class SceneCreatedAction
-		extends PayloadAction<SceneCreatedPayload> {
-
-		constructor(public payload: SceneCreatedPayload) {
-			super(CANVAS_CREATED, payload);
-		}
-	}
-
-	//#endregion
-
 	export type Actions =
 		CanvasCreatedAction |
-		CanvasPlaneCreated |
-		SceneCreatedAction;
+		CanvasPlaneCreated;
 }

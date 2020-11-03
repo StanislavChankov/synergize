@@ -18,15 +18,14 @@ import {
 } from 'babylonjs';
 import 'babylonjs-materials';
 
-import { selectCanvas } from '../../core/store/reducers/scene.reducer';
 import { AppState } from '../store/state/app.state';
-import { SceneActions } from '../store/actions';
+import { SceneActions, SceneCreatedPayload } from '../store/actions';
 
 @Injectable()
 export class EngineService {
 private canvas: HTMLCanvasElement;
 private engine: Engine;
-private camera: FreeCamera;
+// private camera: FreeCamera;
 private scene: Scene;
 private light: Light;
 
@@ -35,51 +34,24 @@ private light: Light;
 	public constructor(
 		private ngZone: NgZone,
 		private store$: Store<AppState>,
-		private windowRef: WindowRefService
-	) {
-			// this.store$
-			// 	.select(selectCanvas)
-			// 	.subscribe(canvas => {
-			// 		debugger;
-			// 		if (canvas) {
-			// 			this.canvas = canvas.nativeElement;
-			// 		}
-			// 	});
-	}
+		private windowRef: WindowRefService) {}
 
-	public createPlane(): void {
-		const plane = BABYLON.MeshBuilder.CreatePlane('ground', { size: 30 }, this.scene as any);
-		plane.rotation.x = Math.PI * 0.5;
-		plane.position.y = -1;
-	}
-
-	public createScene(scene: Scene, engine: Engine, canvas: HTMLCanvasElement): void {
+	public createScene(payload: SceneCreatedPayload): void {
 		// // The first step is to get the reference of the canvas element from our HTML document
-		this.canvas = canvas;
+		this.canvas = payload.canvas;
 
 		// Then, load the Babylon 3D engine:
-		this.engine = engine; //new Engine(this.canvas,  true);
+		this.engine = payload.engine;
 
 		// create a basic BJS Scene object
-		this.scene = scene; // new Scene(this.engine);
-		// this.scene.clearColor = new Color4(0, 0, 0, 0);
+		this.scene = payload.scene; // new Scene(engine);
+		this.scene.clearColor = new Color4(0, 0, 0, 0);
 
-		// create a FreeCamera, and set its position to (x:5, y:10, z:-20 )
-		this.camera = new FreeCamera('camera1', new Vector3(-20, 15, -20), this.scene);
-
-		// target the camera to scene origin
-		this.camera.setTarget(Vector3.Zero());
-
-		// attach the camera to the canvas
-		this.camera.attachControl(this.canvas, false);
-
-		// create a basic light, aiming 0,1,0 - meaning, to the sky
-		this.light = new HemisphericLight('light1', new Vector3(0, 1, 0), this.scene);
+		// create a basic light, aiming 0,1,0 - meaning, to the sk
+		this.light = new HemisphericLight('light1', new Vector3(-50, 30, -50), this.scene);
 
 		// create a built-in "sphere" shape; its constructor takes 4 params: name, subdivisions, radius, scene
 		this.sphere = Mesh.CreateSphere('sphere1', 16, 2, this.scene);
-
-		this.createPlane();
 
 		// create the material with its texture for the sphere and assign it to the sphere
 		const spherMaterial = new StandardMaterial('sun_surface', this.scene);
@@ -89,6 +61,13 @@ private light: Light;
 		// move the sphere upward 1/2 of its height
 		this.sphere.position.y = 1;
 
+		this.registerSphereRotation();
+
+		// generates the world x-y-z axis for better understanding
+		this.showWorldAxis(8, this.scene);
+	}
+
+	private registerSphereRotation(): void {
 		// simple rotation along the y axis
 		this.scene.registerAfterRender(() => {
 			this.sphere.rotate (
@@ -97,19 +76,14 @@ private light: Light;
 				BABYLON.Space.LOCAL
 			);
 		});
-
-		// generates the world x-y-z axis for better understanding
-		this.showWorldAxis(8);
-
-		// this.store$.dispatch(new SceneActions.CanvasPlaneCreated({}));
 	}
 
-	public animate(): void {
+	public animate(scene: Scene): void {
 		// We have to run this outside angular zones,
 		// because it could trigger heavy changeDetection cycles.
 		this.ngZone.runOutsideAngular(() => {
 			const rendererLoopCallback = () => {
-				this.scene.render();
+				scene.render();
 			};
 
 			if (this.windowRef.document.readyState !== 'loading') {
@@ -133,14 +107,14 @@ private light: Light;
    *
    * @param size number
    */
-	public showWorldAxis(size: number): void {
+	public showWorldAxis(size: number, scene: Scene): void {
 
 		const makeTextPlane = (text: string, color: string, textSize: number) => {
-				const dynamicTexture = new DynamicTexture('DynamicTexture', 50, this.scene, true);
+				const dynamicTexture = new DynamicTexture('DynamicTexture', 50, scene, true);
 				dynamicTexture.hasAlpha = true;
 				dynamicTexture.drawText(text, 5, 40, 'bold 36px Arial', color , 'transparent', true);
-				const plane = Mesh.CreatePlane('TextPlane', textSize, this.scene, true);
-				const material = new StandardMaterial('TextPlaneMaterial', this.scene);
+				const plane = Mesh.CreatePlane('TextPlane', textSize, scene, true);
+				const material = new StandardMaterial('TextPlaneMaterial', scene);
 				material.backFaceCulling = false;
 				material.specularColor = new BABYLON.Color3(0, 0, 0);
 				material.diffuseTexture = dynamicTexture;
@@ -156,7 +130,7 @@ private light: Light;
 				new Vector3(size, 0, 0), new Vector3(size * 0.95, 0.05 * size, 0),
 				new Vector3(size, 0, 0), new Vector3(size * 0.95, -0.05 * size, 0)
 			],
-			this.scene
+			scene
 		);
 
 		axisX.color = new BABYLON.Color3(1, 0, 0);
@@ -169,7 +143,7 @@ private light: Light;
 				Vector3.Zero(), new Vector3(0, size, 0), new Vector3( -0.05 * size, size * 0.95, 0),
 				new Vector3(0, size, 0), new Vector3( 0.05 * size, size * 0.95, 0)
 			],
-			this.scene
+			scene
 		);
 
 		axisY.color = new Color3(0, 1, 0);
@@ -182,7 +156,7 @@ private light: Light;
 				Vector3.Zero(), new Vector3(0, 0, size), new Vector3( 0 , -0.05 * size, size * 0.95),
 				new Vector3(0, 0, size), new Vector3( 0, 0.05 * size, size * 0.95)
 			],
-			this.scene
+			scene
 		);
 
 		axisZ.color = new Color3(0, 0, 1);

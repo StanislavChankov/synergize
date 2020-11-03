@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
-import { Action, Store } from '@ngrx/store';
-import { switchMap, map, tap, catchError, retry } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { tap } from 'rxjs/operators';
 import { AppState } from '../../state/app.state';
-import { MenuInteractionActions, SceneActions } from '../../actions';
-import { selectCanvas } from '../../reducers/scene.reducer';
-
+import { MenuInteractionActions } from '../../actions';
 
 @Injectable()
 export class MenuInteractionEffects {
