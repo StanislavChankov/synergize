@@ -61,10 +61,10 @@ private light: Light;
 		// move the sphere upward 1/2 of its height
 		this.sphere.position.y = 1;
 
-		this.registerSphereRotation();
+		// this.registerSphereRotation();
 
 		// generates the world x-y-z axis for better understanding
-		this.showWorldAxis(8, this.scene);
+		// this.showWorldAxis(8, this.scene);
 	}
 
 	private registerSphereRotation(): void {

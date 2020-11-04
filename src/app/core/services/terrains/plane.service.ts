@@ -5,9 +5,9 @@ import { Scene } from 'babylonjs/scene';
 @Injectable()
 export class PlaneService {
 
-	public createPlane(scene: Scene): void {
+	public createPlane(scene: Scene, size: number): void {
 		const plane1 = new Plane(1, 1, 1, 1);
-		const plane = BABYLON.MeshBuilder.CreatePlane('ground', { size: 30, height: 30  }, scene as any);
+		const plane = BABYLON.MeshBuilder.CreatePlane('ground', { size: size, height: size }, scene as any);
 
 		plane.rotation.x = Math.PI * 0.5;
 		plane.position.y = -1;

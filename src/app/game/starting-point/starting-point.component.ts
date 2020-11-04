@@ -16,7 +16,7 @@ import {
 	templateUrl: './starting-point.component.html',
 	styleUrls: ['./starting-point.component.scss'],
 })
-export class StartingPointComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class StartingPointComponent extends BaseComponent implements AfterViewInit {
 
 	private canvas: HTMLCanvasElement;
 	@ViewChild('rendererCanvas') canvasElementRef: ElementRef;
@@ -43,9 +43,6 @@ export class StartingPointComponent extends BaseComponent implements OnInit, Aft
 		this.store$.dispatch(new SceneInitializationActions.SceneCreatedAction(payload));
 
 		this.resizeCanvas();
-	}
-
-	public ngOnInit(): void {
 	}
 
 	private resizeCanvas() {
