@@ -5,6 +5,7 @@ import { SceneInitializationActions } from '../../actions';
 import { EngineService } from '../../../services/engine.service';
 import { CameraService } from '../../../services/cameras/camera.service';
 import { BoxesCreatorService } from '../../../services/boxes';
+import { WorldAxisService } from '../../../services/orientation/world-axis.service';
 
 @Injectable()
 export class SceneInitializationEffects {
@@ -19,12 +20,15 @@ export class SceneInitializationEffects {
 			const planeSize = 10;
 			// this.planeService.createPlane(_action.payload.scene, planeSize);
 			this.boxCreatorService.createBoxes(_action.payload.scene, planeSize, planeSize);
+
+			this.worldAxisService.showAxis(5, _action.payload.scene);
 		}),
 	);
 
 	constructor(
 		private actions$: Actions,
 		private cameraService: CameraService,
+		private worldAxisService: WorldAxisService,
 		private boxCreatorService: BoxesCreatorService,
 		private engine: EngineService) {}
 }

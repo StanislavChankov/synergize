@@ -51,15 +51,15 @@ private light: Light;
 		this.light = new HemisphericLight('light1', new Vector3(-50, 30, -50), this.scene);
 
 		// create a built-in "sphere" shape; its constructor takes 4 params: name, subdivisions, radius, scene
-		this.sphere = Mesh.CreateSphere('sphere1', 16, 2, this.scene);
+		// this.sphere = Mesh.CreateSphere('sphere1', 16, 2, this.scene);
 
 		// create the material with its texture for the sphere and assign it to the sphere
 		const spherMaterial = new StandardMaterial('sun_surface', this.scene);
 		spherMaterial.diffuseTexture = new Texture('assets/textures/sun.jpg', this.scene);
-		this.sphere.material = spherMaterial;
+		// this.sphere.material = spherMaterial;
 
 		// move the sphere upward 1/2 of its height
-		this.sphere.position.y = 1;
+		// this.sphere.position.y = 1;
 
 		// this.registerSphereRotation();
 

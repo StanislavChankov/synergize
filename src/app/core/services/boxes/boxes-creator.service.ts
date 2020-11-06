@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AbstractMesh, Color3, Material, Scene, StandardMaterial } from 'babylonjs';
 import { Random } from '../../functions';
 import { Animation } from 'babylonjs';
+import { TriangleMesh3dCreatorService } from '../meshes/triangle-mesh-3d-creator.service';
 
 export interface MysteryCube {
 	cubeMesh: BABYLON.Mesh;
@@ -20,6 +21,10 @@ export class BoxesCreatorService {
 	private greenMaterial: StandardMaterial;
 	private upperYPosition = 2;
 	private lowerYPosition = 1;
+
+constructor(private triangleCreatorService: TriangleMesh3dCreatorService) {
+
+}
 
 	public createBoxes(scene: Scene, xLength: number, zLength): void {
 		this.initializeMaterials(scene);
@@ -51,6 +56,11 @@ export class BoxesCreatorService {
 		}
 
 		this.attachScenePickHandler(scene);
+
+		var mesh = this.triangleCreatorService.get3dTriangleMesh(scene);
+		mesh.visibility = 1;
+		mesh.position.y = 10;
+		// this.showAxis(10, scene);
 	}
 
 	private initializeMaterials(scene: Scene): void {
@@ -80,8 +90,8 @@ export class BoxesCreatorService {
 	}
 
 	private animate(scene: Scene, box: AbstractMesh, direction: CubeMoveDirection): void {
-		let animationSpeed = 2;
-    let yMoveAnimation = this.getMoveYAnimation(animationSpeed, direction);
+		const animationSpeed = 2;
+		const yMoveAnimation = this.getMoveYAnimation(animationSpeed, direction);
 		scene.beginDirectAnimation(box, [yMoveAnimation], 0, yMoveAnimation.getHighestFrame(), false);
 	}
 
