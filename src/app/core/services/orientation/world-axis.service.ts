@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Scene, StandardMaterial } from 'babylonjs';
+import { DynamicTexture, Material, Scene, StandardMaterial } from 'babylonjs';
 
 @Injectable()
 export class WorldAxisService {
@@ -45,11 +45,11 @@ export class WorldAxisService {
 	}
 
 	public makeTextPlane(text, color, size, scene) {
-		const dynamicTexture = new BABYLON.DynamicTexture('DynamicTexture', 50, scene, true);
+		const dynamicTexture = new DynamicTexture('DynamicTexture', 50, scene, true);
 		dynamicTexture.hasAlpha = true;
 		dynamicTexture.drawText(text, 5, 40, 'bold 36px Arial', color , 'transparent', true);
 		const plane = BABYLON.Mesh.CreatePlane('TextPlane', size, scene, true);
-		plane.material = new BABYLON.StandardMaterial('TextPlaneMaterial', scene);
+		plane.material = new BABYLON.Material('TextPlaneMaterial', scene);
 		plane.material.backFaceCulling = false;
 		plane.material.specularColor = new BABYLON.Color3(0, 0, 0);
 		plane.material.diffuseTexture = dynamicTexture;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AbstractMesh, Color3, Material, Scene, StandardMaterial } from 'babylonjs';
 import { Random } from '../../functions';
 import { Animation } from 'babylonjs';
-import { TriangleMesh3dCreatorService } from '../meshes/triangle-mesh-3d-creator.service';
+import { TriangleMesh3dCreatorService, TrianglePrismOptions, TrianglePrismRotationType } from '../meshes/triangle-mesh-3d-creator.service';
 
 export interface MysteryCube {
 	cubeMesh: BABYLON.Mesh;
@@ -56,11 +56,23 @@ constructor(private triangleCreatorService: TriangleMesh3dCreatorService) {
 		}
 
 		this.attachScenePickHandler(scene);
+		var opt = new TrianglePrismOptions();
+		opt.aLength = 2;
+		opt.bLength = 2;
+		opt.height = 2;
 
-		var mesh = this.triangleCreatorService.get3dTriangleMesh(scene);
-		mesh.visibility = 1;
-		mesh.position.y = 10;
+		// var mesh = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.BottomLeft);
+		// mesh.visibility = 1;
+		// mesh.position.x = 5;
+		// mesh.position.y = 5;
+		// mesh.position.z = 5;
 		// this.showAxis(10, scene);
+		var mesh2 = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.TopRight);
+		mesh2.visibility = 1;
+		mesh2.position.x = 5;
+		mesh2.position.y = 5;
+		mesh2.position.z = 5;
+		// mesh2.rotation.y = 180;
 	}
 
 	private initializeMaterials(scene: Scene): void {

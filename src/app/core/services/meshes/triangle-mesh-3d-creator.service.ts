@@ -1,38 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Scene } from 'babylonjs';
 
-export interface TrianglePrismOptions {
+export class TrianglePrismOptions {
 	height: number;
 	aLength: number;
 	bLength: number;
 }
 
+export enum TrianglePrismRotationType {
+	Unspecified = 0,
+	BottomLeft = 1,
+	TopRight = 2
+}
+
 @Injectable()
 export class TriangleMesh3dCreatorService {
 
-	public get3dTriangleMesh(scene: Scene, options: TrianglePrismOptions): BABYLON.Mesh {
-		const positions = [
-			// top triangle
-			1, 2, 0,
-			2, 2, 0,
-			1, 2, 2,
-			// bottom triangle
-			1, 0, 0,
-			2, 0, 0,
-			1, 0, 2,
-		];
+	public get3dTriangleMesh(scene: Scene, opt: TrianglePrismOptions, rotation: TrianglePrismRotationType): BABYLON.Mesh {
+		const positions = this.getPositionsByRotationType(opt, rotation);
 
 		// connects the triangle dots ... counter clockwise
-		const indices = [];
-		indices.push(2, 0, 1);
-		indices.push(5, 3, 4);
-		indices.push(2, 5, 3);
-		indices.push(2, 3, 0);
-		indices.push(0, 3, 4);
-		indices.push(0, 4, 1);
-		indices.push(1, 4, 5);
-		indices.push(1, 5, 2);
-		indices.push(3, 5, 4);
+		const indices = this.getIndiciesByRotationType();
 
 		// light bounce directions
 		const normals = [
@@ -60,5 +48,49 @@ export class TriangleMesh3dCreatorService {
 		trianglePrism.visibility = 0;
 
 		return trianglePrism;
+	}
+
+	private getIndiciesByRotationType(): any[] {
+		const indices = [];
+		indices.push(2, 0, 1);
+		indices.push(5, 3, 4);
+		indices.push(2, 5, 3);
+		indices.push(2, 3, 0);
+		indices.push(0, 3, 4);
+		indices.push(0, 4, 1);
+		indices.push(1, 4, 5);
+		indices.push(1, 5, 2);
+		indices.push(3, 5, 4);
+
+		return indices;
+	}
+
+	private getPositionsByRotationType(opt: TrianglePrismOptions, rotation: TrianglePrismRotationType): number[] {
+		let positions = [];
+		if (rotation === TrianglePrismRotationType.BottomLeft) {
+			positions = [
+				// top triangle
+				1, opt.height, 0,
+				opt.bLength, opt.height, 0,
+				1, opt.height, opt.aLength,
+				// bottom triangle
+				1, 0, 0,
+				opt.bLength, 0, 0,
+				1, 0, opt.aLength,
+			];
+		} else {
+			positions = [
+					// top triangle
+				opt.bLength, opt.height, 0,
+				2, opt.height, 2,
+				1, opt.height, opt.aLength,
+				// bottom triangle
+				opt.bLength, 0, 0,
+				2, 0, 2,
+				1, 0, opt.aLength,
+			];
+		}
+
+		return positions;
 	}
 }
