@@ -20,7 +20,7 @@ export class TriangleMesh3dCreatorService {
 		const positions = this.getPositionsByRotationType(opt, rotation);
 
 		// connects the triangle dots ... counter clockwise
-		const indices = this.getIndiciesByRotationType();
+		const indices = this.getIndiciesByRotationType(rotation);
 
 		// light bounce directions
 		const normals = [
@@ -50,17 +50,29 @@ export class TriangleMesh3dCreatorService {
 		return trianglePrism;
 	}
 
-	private getIndiciesByRotationType(): any[] {
+	private getIndiciesByRotationType(rotation: TrianglePrismRotationType): any[] {
 		const indices = [];
-		indices.push(2, 0, 1);
-		indices.push(5, 3, 4);
-		indices.push(2, 5, 3);
-		indices.push(2, 3, 0);
-		indices.push(0, 3, 4);
-		indices.push(0, 4, 1);
-		indices.push(1, 4, 5);
-		indices.push(1, 5, 2);
-		indices.push(3, 5, 4);
+		if (rotation === TrianglePrismRotationType.BottomLeft) {
+			indices.push(2, 0, 1);
+			indices.push(5, 3, 4);
+			indices.push(2, 5, 3);
+			indices.push(2, 3, 0);
+			indices.push(0, 3, 4);
+			indices.push(0, 4, 1);
+			indices.push(1, 4, 5);
+			indices.push(1, 5, 2);
+			indices.push(3, 5, 4);
+		} else {
+			indices.push(0, 3, 5);
+			indices.push(5, 2, 0);
+			indices.push(3, 5, 4);
+			indices.push(1, 4, 3);
+			indices.push(3, 0, 1);
+			indices.push(2, 5, 4);
+			indices.push(4, 1, 2);
+			indices.push(0, 2, 1);
+			indices.push(5, 3, 4);
+		}
 
 		return indices;
 	}
@@ -70,24 +82,24 @@ export class TriangleMesh3dCreatorService {
 		if (rotation === TrianglePrismRotationType.BottomLeft) {
 			positions = [
 				// top triangle
-				1, opt.height, 0,
-				opt.bLength, opt.height, 0,
-				1, opt.height, opt.aLength,
+				2, opt.height, 2,
+				0, opt.height, 2,
+				2, opt.height, 0,
 				// bottom triangle
-				1, 0, 0,
-				opt.bLength, 0, 0,
-				1, 0, opt.aLength,
+				2, 0, 2,
+				0, 0, 2,
+				2, 0, 0,
 			];
 		} else {
 			positions = [
-					// top triangle
-				opt.bLength, opt.height, 0,
-				2, opt.height, 2,
-				1, opt.height, opt.aLength,
+				// top triangle
+				0, opt.height, 0,
+				0, opt.height, 2,
+				2, opt.height, 0,
 				// bottom triangle
-				opt.bLength, 0, 0,
-				2, 0, 2,
-				1, 0, opt.aLength,
+				0, 0, 0,
+				0, 0, 2,
+				2, 0, 0,
 			];
 		}
 

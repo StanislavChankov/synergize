@@ -51,8 +51,8 @@ export class WorldAxisService {
 		const plane = BABYLON.Mesh.CreatePlane('TextPlane', size, scene, true);
 		plane.material = new BABYLON.Material('TextPlaneMaterial', scene);
 		plane.material.backFaceCulling = false;
-		plane.material.specularColor = new BABYLON.Color3(0, 0, 0);
-		plane.material.diffuseTexture = dynamicTexture;
+		// plane.material.specularColor = new BABYLON.Color3(0, 0, 0);
+		// plane.material.diffuseTexture = dynamicTexture;
 		return plane;
 	}
 }

@@ -19,8 +19,8 @@ export enum CubeMoveDirection {
 export class BoxesCreatorService {
 	private redMaterial: StandardMaterial;
 	private greenMaterial: StandardMaterial;
-	private upperYPosition = 2;
-	private lowerYPosition = 1;
+	private upperYPosition = 1;
+	private lowerYPosition = 0;
 
 constructor(private triangleCreatorService: TriangleMesh3dCreatorService) {
 
@@ -32,47 +32,48 @@ constructor(private triangleCreatorService: TriangleMesh3dCreatorService) {
 		const boxOptions = { width: 2, height: 2, depth: 2 };
 		const boxes = new Array<MysteryCube>();
 
-		for (let xIndex = 0; xIndex < xLength; xIndex += 2) {
-			for (let zIndex = 0; zIndex < zLength; zIndex += 2) {
-				const box = BABYLON.MeshBuilder.CreateBox('box', boxOptions, scene as any);
-				// console.log(`Box created on x${xIndex}, z:${zIndex}`);
-				box.position.x = xIndex;
-				box.position.z = zIndex;
-				box.overlayColor = new BABYLON.Color3(1, 1, 1);
+		// for (let xIndex = 0; xIndex < xLength; xIndex += 2) {
+		// 	for (let zIndex = 0; zIndex < zLength; zIndex += 2) {
+		// 		const box = BABYLON.MeshBuilder.CreateBox('box', boxOptions, scene as any);
+		// 		// console.log(`Box created on x${xIndex}, z:${zIndex}`);
+		// 		box.position.x = xIndex;
+		// 		box.position.z = zIndex;
+		// 		box.overlayColor = new BABYLON.Color3(1, 1, 1);
 
-				const toggled = Random.GetRandomBoolean();
-				box.material = toggled
-					? this.greenMaterial as any
-					: this.redMaterial;
-				box.position.y = toggled
-					? this.upperYPosition
-					: this.lowerYPosition;
-				const mb = {
-					cubeMesh: box,
-					togggle: toggled,
-				} as MysteryCube;
-				boxes.push(mb);
-			}
-		}
+		// 		const toggled = Random.GetRandomBoolean();
+		// 		box.material = toggled
+		// 			? this.greenMaterial as any
+		// 			: this.redMaterial;
+		// 		box.position.y = toggled
+		// 			? this.upperYPosition
+		// 			: this.lowerYPosition;
+		// 		const mb = {
+		// 			cubeMesh: box,
+		// 			togggle: toggled,
+		// 		} as MysteryCube;
+		// 		boxes.push(mb);
+		// 	}
+		// }
 
 		this.attachScenePickHandler(scene);
-		var opt = new TrianglePrismOptions();
+		const opt = new TrianglePrismOptions();
 		opt.aLength = 2;
 		opt.bLength = 2;
 		opt.height = 2;
 
-		// var mesh = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.BottomLeft);
-		// mesh.visibility = 1;
-		// mesh.position.x = 5;
-		// mesh.position.y = 5;
-		// mesh.position.z = 5;
-		// this.showAxis(10, scene);
-		var mesh2 = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.TopRight);
-		mesh2.visibility = 1;
-		mesh2.position.x = 5;
-		mesh2.position.y = 5;
-		mesh2.position.z = 5;
-		// mesh2.rotation.y = 180;
+		for (let xIndex = 0; xIndex < xLength; xIndex += 2) {
+			const bottomleftTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.BottomLeft);
+			bottomleftTriangle.visibility = 1;
+			bottomleftTriangle.position.y = 0;
+			bottomleftTriangle.position.x = xIndex;
+			bottomleftTriangle.position.z = 0;
+
+			const topRightTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.TopRight);
+			topRightTriangle.visibility = 1;
+			topRightTriangle.position.y = 0;
+			topRightTriangle.position.x = xIndex;
+			topRightTriangle.position.z = 0;
+		}
 	}
 
 	private initializeMaterials(scene: Scene): void {
@@ -103,11 +104,11 @@ constructor(private triangleCreatorService: TriangleMesh3dCreatorService) {
 
 	private animate(scene: Scene, box: AbstractMesh, direction: CubeMoveDirection): void {
 		const animationSpeed = 2;
-		const yMoveAnimation = this.getMoveYAnimation(animationSpeed, direction);
+		const yMoveAnimation = this.getMoveYAnimation(animationSpeed, direction, box);
 		scene.beginDirectAnimation(box, [yMoveAnimation], 0, yMoveAnimation.getHighestFrame(), false);
 	}
 
-	public getMoveYAnimation(animationSpeed: number, direction: CubeMoveDirection): Animation {
+	public getMoveYAnimation(animationSpeed: number, direction: CubeMoveDirection, mesh: AbstractMesh): Animation {
 		const frameRate = 1.0 / animationSpeed;
 
 		const meshStartY = direction === CubeMoveDirection.Down ? this.upperYPosition : this.lowerYPosition;
