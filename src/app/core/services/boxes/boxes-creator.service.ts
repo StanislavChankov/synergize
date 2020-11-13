@@ -23,37 +23,10 @@ export class BoxesCreatorService {
 	private lowerYPosition = 0;
 
 constructor(private triangleCreatorService: TriangleMesh3dCreatorService) {
-
 }
 
 	public createBoxes(scene: Scene, xLength: number, zLength): void {
 		this.initializeMaterials(scene);
-
-		const boxOptions = { width: 2, height: 2, depth: 2 };
-		const boxes = new Array<MysteryCube>();
-
-		// for (let xIndex = 0; xIndex < xLength; xIndex += 2) {
-		// 	for (let zIndex = 0; zIndex < zLength; zIndex += 2) {
-		// 		const box = BABYLON.MeshBuilder.CreateBox('box', boxOptions, scene as any);
-		// 		// console.log(`Box created on x${xIndex}, z:${zIndex}`);
-		// 		box.position.x = xIndex;
-		// 		box.position.z = zIndex;
-		// 		box.overlayColor = new BABYLON.Color3(1, 1, 1);
-
-		// 		const toggled = Random.GetRandomBoolean();
-		// 		box.material = toggled
-		// 			? this.greenMaterial as any
-		// 			: this.redMaterial;
-		// 		box.position.y = toggled
-		// 			? this.upperYPosition
-		// 			: this.lowerYPosition;
-		// 		const mb = {
-		// 			cubeMesh: box,
-		// 			togggle: toggled,
-		// 		} as MysteryCube;
-		// 		boxes.push(mb);
-		// 	}
-		// }
 
 		this.attachScenePickHandler(scene);
 		const opt = new TrianglePrismOptions();
@@ -61,18 +34,22 @@ constructor(private triangleCreatorService: TriangleMesh3dCreatorService) {
 		opt.bLength = 2;
 		opt.height = 2;
 
-		for (let xIndex = 0; xIndex < xLength; xIndex += 2) {
-			const bottomleftTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.BottomLeft);
-			bottomleftTriangle.visibility = 1;
-			bottomleftTriangle.position.y = 0;
-			bottomleftTriangle.position.x = xIndex;
-			bottomleftTriangle.position.z = 0;
 
-			const topRightTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.TopRight);
-			topRightTriangle.visibility = 1;
-			topRightTriangle.position.y = 0;
-			topRightTriangle.position.x = xIndex;
-			topRightTriangle.position.z = 0;
+		for (let zIndex = 0; zIndex < zLength; zIndex += 2) {
+			for (let xIndex = 0; xIndex < xLength; xIndex += 2) {
+				const bottomleftTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.BottomLeft);
+				bottomleftTriangle.visibility = 1;
+				bottomleftTriangle.position.y = 0;
+				bottomleftTriangle.position.x = xIndex;
+				bottomleftTriangle.position.z = zIndex;
+				bottomleftTriangle.material = this.redMaterial as any;
+				const topRightTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.TopRight);
+				topRightTriangle.visibility = 1;
+				topRightTriangle.position.y = 0;
+				topRightTriangle.position.x = xIndex;
+				topRightTriangle.position.z = zIndex;
+				topRightTriangle.material = this.redMaterial as any;
+			}
 		}
 	}
 
