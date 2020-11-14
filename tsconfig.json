@@ -6,6 +6,9 @@
 */
 {
   "files": [],
+  "types": [
+		"babylonjs"
+	],
   "references": [
     {
       "path": "./src/tsconfig.app.json"
