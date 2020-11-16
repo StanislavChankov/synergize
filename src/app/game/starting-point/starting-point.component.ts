@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../core/store/state/app.state';
 import { BaseComponent } from '../../components/base.component';
 import { Actions } from '@ngrx/effects';
 import { SceneCreatedPayload, SceneInitializationActions } from '../../core/store/actions';
+import { SceneProvider } from '../../core/services/scenes';
 
 import {
 	Engine,
@@ -23,7 +24,8 @@ export class StartingPointComponent extends BaseComponent implements AfterViewIn
 
 	public constructor(
 		protected store$: Store<AppState>,
-		protected updates$: Actions) {
+		protected updates$: Actions,
+		private sceneProvider: SceneProvider) {
 		super(store$, updates$);
 	}
 
@@ -33,6 +35,10 @@ export class StartingPointComponent extends BaseComponent implements AfterViewIn
 		var newEngine = new Engine(this.canvas,  true);
 		var newScene = new Scene(newEngine);
 		newScene.clearColor = new Color4(0, 0, 0, 0);
+
+		this.sceneProvider.engine = newEngine;
+		this.sceneProvider.scene = newScene;
+		this.sceneProvider.canvas = this.canvas;
 
 		const payload = {
 			engine: newEngine,

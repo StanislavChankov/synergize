@@ -14,7 +14,6 @@ import {
 	StandardMaterial,
 	Texture,
 	DynamicTexture,
-	MeshBuilder
 } from 'babylonjs';
 import 'babylonjs-materials';
 

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AbstractMesh, Color3, Material, Scene, StandardMaterial } from 'babylonjs';
+import { AbstractMesh, Color3, Material, Scene, StandardMaterial, Vector3 } from 'babylonjs';
 import { Random } from '../../functions';
 import { Animation } from 'babylonjs';
 import { TriangleMesh3dCreatorService, TrianglePrismOptions, TrianglePrismRotationType } from '../meshes/triangle-mesh-3d-creator.service';
+import { SceneProvider } from '../scenes';
 
 export interface MysteryCube {
 	cubeMesh: BABYLON.Mesh;
@@ -22,35 +23,59 @@ export class BoxesCreatorService {
 	private upperYPosition = 1;
 	private lowerYPosition = 0;
 
-constructor(private triangleCreatorService: TriangleMesh3dCreatorService) {
+constructor(private sceneProvider: SceneProvider) {
 }
 
-	public createBoxes(scene: Scene, xLength: number, zLength): void {
+	public createEnvironment(xLength: number, zLength): void {
+		var scene = this.sceneProvider.scene;
 		this.initializeMaterials(scene);
 
-		this.attachScenePickHandler(scene);
+		// this.attachScenePickHandler(scene);
 		const opt = new TrianglePrismOptions();
 		opt.aLength = 2;
 		opt.bLength = 2;
 		opt.height = 2;
 
+		// for (let zIndex = 0; zIndex < zLength; zIndex += 2) {
+		// 	for (let xIndex = 0; xIndex < xLength; xIndex += 2) {
+		// 		const bottomleftTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.BottomLeft);
+		// 		bottomleftTriangle.visibility = 1;
+		// 		bottomleftTriangle.position.y = 0;
+		// 		bottomleftTriangle.position.x = xIndex;
+		// 		bottomleftTriangle.position.z = zIndex;
+		// 		bottomleftTriangle.material = this.redMaterial as any;
+		// 		const topRightTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.TopRight);
+		// 		topRightTriangle.visibility = 1;
+		// 		topRightTriangle.position.y = 0;
+		// 		topRightTriangle.position.x = xIndex;
+		// 		topRightTriangle.position.z = zIndex;
+		// 		topRightTriangle.material = this.redMaterial as any;
+		// 	}
+		// }
 
-		for (let zIndex = 0; zIndex < zLength; zIndex += 2) {
-			for (let xIndex = 0; xIndex < xLength; xIndex += 2) {
-				const bottomleftTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.BottomLeft);
-				bottomleftTriangle.visibility = 1;
-				bottomleftTriangle.position.y = 0;
-				bottomleftTriangle.position.x = xIndex;
-				bottomleftTriangle.position.z = zIndex;
-				bottomleftTriangle.material = this.redMaterial as any;
-				const topRightTriangle = this.triangleCreatorService.get3dTriangleMesh(scene, opt, TrianglePrismRotationType.TopRight);
-				topRightTriangle.visibility = 1;
-				topRightTriangle.position.y = 0;
-				topRightTriangle.position.x = xIndex;
-				topRightTriangle.position.z = zIndex;
-				topRightTriangle.material = this.redMaterial as any;
-			}
-		}
+		// BABYLON.SceneLoader.ImportMesh('', './assets/3d/' , 'plane.babylon', scene as any, meshes => {
+		// 	meshes.forEach(m => {
+		// 		m.position.x = 0;
+		// 		m.position.y = 0;
+		// 		m.position.z = 0;
+		// 		m.material = this.redMaterial as any;
+		// 	});
+		// 	// do something with the meshes and skeletons
+		// 	// particleSystems are always null for glTF assets
+		// 	});
+
+		// BABYLON.SceneLoader.ImportMesh('', './assets/3d/rocks/' , 'rock-normal.babylon', scene as any, meshes => {
+		// 	meshes.forEach(m => {
+		// 		m.position.x = 5;
+		// 		m.position.y = 5;
+		// 		m.position.z = 5;
+		// 		m.scaling = new BABYLON.Vector3(1, 1, 1);
+		// 		m.material = this.greenMaterial as any;
+		// 		// m.material = this.greenMaterial as any;
+		// 	});
+		// 	// do something with the meshes and skeletons
+		// 	// particleSystems are always null for glTF assets
+		// 	});
 	}
 
 	private initializeMaterials(scene: Scene): void {
@@ -60,7 +85,8 @@ constructor(private triangleCreatorService: TriangleMesh3dCreatorService) {
 
 		// green material
 		this.greenMaterial = new StandardMaterial('greenMat', scene);
-		this.greenMaterial.diffuseColor = new Color3(0, 1, 0);
+		// this.greenMaterial.diffuseColor = new Color3(0, 1, 0);
+		this.greenMaterial.diffuseTexture = new BABYLON.Texture('./assets/3d/rocks/Rock_6_Base_Color.jpg', scene as any) as any;
 	}
 
 	private attachScenePickHandler(scene: Scene) {

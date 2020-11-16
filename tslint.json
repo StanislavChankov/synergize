@@ -101,7 +101,8 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "import-destructuring-spacing": true
+    "import-destructuring-spacing": true,
+	"array-type": [true, "generic"]
   },
   "rulesDirectory": [
     "codelyzer"

@@ -13,16 +13,7 @@ export class MenuInteractionEffects {
 		public startGameButtonClickedEffect$ = this.actions$.pipe(
 			ofType(MenuInteractionActions.START_GAME_BUTTON_CLICKED),
 			tap((_action: MenuInteractionActions.StartGameClickedAction) => {
-				debugger;
 				this.router.navigateByUrl('/game/starting');
-				// this.store$.dispatch(new SceneActions.CreateCanvasAction({}));
-				// this.store$
-				// 	.select(selectCanvas)
-				// 	.subscribe(canvas => {
-				// 		if (canvas) {
-				// 			this.store$.dispatch(new SceneActions.CanvasCreatedAction(canvas));
-				// 		}
-				// 	});
 			}),
 		);
 

@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { Injector, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { StoreModule } from '@ngrx/store';
@@ -8,9 +8,10 @@ import { StoreDevtoolsModule, StoreDevtoolsOptions } from '@ngrx/store-devtools'
 
 import { environment } from '../../environments/environment.prod';
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import { gameServices } from './services';
+import { creatorServices, gameServices } from './services';
 import { combinedReducers } from './store/reducers';
 import { effects } from './store/effects';
+import { SceneProvider } from './services/scenes';
 
 @NgModule({
 	imports: [
@@ -41,6 +42,7 @@ export class CoreModule {
 			ngModule: CoreModule,
 			providers: [
 				...gameServices,
+				...creatorServices,
 			],
 		};
 	}
