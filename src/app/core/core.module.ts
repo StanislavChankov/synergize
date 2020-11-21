@@ -11,7 +11,6 @@ import { throwIfAlreadyLoaded } from './module-import-guard';
 import { creatorServices, gameServices } from './services';
 import { combinedReducers } from './store/reducers';
 import { effects } from './store/effects';
-import { SceneProvider } from './services/scenes';
 
 @NgModule({
 	imports: [

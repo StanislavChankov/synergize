@@ -8,3 +8,6 @@ export * from './scene/scene-initialization.actions';
 
 // interactions
 export * from './interaction/menu-interaction.actions';
+
+// input
+export * from './input/peripheral-input.actions';

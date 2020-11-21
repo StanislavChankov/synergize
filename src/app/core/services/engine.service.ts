@@ -3,7 +3,6 @@ import { Injectable, NgZone } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
 	Engine,
-	FreeCamera,
 	Scene,
 	Light,
 	Mesh,
@@ -24,7 +23,6 @@ import { SceneActions, SceneCreatedPayload } from '../store/actions';
 export class EngineService {
 private canvas: HTMLCanvasElement;
 private engine: Engine;
-// private camera: FreeCamera;
 private scene: Scene;
 private light: Light;
 
@@ -64,17 +62,6 @@ private light: Light;
 
 		// generates the world x-y-z axis for better understanding
 		// this.showWorldAxis(8, this.scene);
-	}
-
-	private registerSphereRotation(): void {
-		// simple rotation along the y axis
-		this.scene.registerAfterRender(() => {
-			this.sphere.rotate (
-				new Vector3(0, 1, 0),
-				0.02,
-				BABYLON.Space.LOCAL
-			);
-		});
 	}
 
 	public animate(scene: Scene): void {

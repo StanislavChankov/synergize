@@ -7,12 +7,19 @@ import { ModelsData, ModelType } from '../models';
 export class EnvironmentDescription {
 	public models: Array<EnvironmentModel>;
 	public ground: EnvironmentModel;
+	public character: CharacterModel;
 
 	constructor(private sceneProvider: SceneProvider) {
+		this.character = {
+			position: new Vector3(15, 0.6, 15),
+			modelType: ModelType.CharacterMale1,
+		} as CharacterModel;
+
 		this.ground = {
 			position: new Vector3(0, 0, 0),
 			modelType: ModelType.PlaneBasic,
 		} as EnvironmentModel;
+
 		this.models = [
 			{ position: new Vector3(5, 0.6, 5), modelType: ModelType.BasicRock },
 			{ position: new Vector3(10, 0.6, 10), modelType: ModelType.Palm1 },
@@ -28,6 +35,18 @@ export class EnvironmentDescription {
 		mesh.position = this.ground.position;
 		const material = await this.getTextureMaterialByModelType(ModelType.PlaneBasic, this.sceneProvider.scene);
 		mesh.material = material;
+	}
+
+	public async initializeCharacter(): Promise<void> {
+		if (!this.character) {
+			throw new Error('Character object not being initialized.');
+		}
+
+		const mesh: AbstractMesh = await this.getMeshByModelType(this.character.modelType, this.sceneProvider.scene);
+		mesh.position = this.character.position;
+		const material = await this.getTextureMaterialByModelType(this.character.modelType, this.sceneProvider.scene);
+		mesh.material = material;
+		this.character.mesh = mesh;
 	}
 
 	public async initializeEnvironment(): Promise<void> {
@@ -57,7 +76,7 @@ export class EnvironmentDescription {
 	public async getTextureMaterialByModelType(modelType: ModelType, scene: Scene): Promise<StandardMaterial> {
 		const modelTextureMap = ModelsData.modelTextureMap.get(modelType);
 
-		const textureMaterial = new StandardMaterial('greenMat', scene);
+		const textureMaterial = new StandardMaterial('random', scene);
 		textureMaterial.diffuseTexture = new Texture(modelTextureMap.textureFilePath, scene);
 
 		return textureMaterial;
@@ -67,4 +86,10 @@ export class EnvironmentDescription {
 export interface EnvironmentModel {
 	position: Vector3;
 	modelType: ModelType;
+}
+
+export interface CharacterModel {
+	position: Vector3;
+	modelType: ModelType;
+	mesh: AbstractMesh;
 }

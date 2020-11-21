@@ -2,6 +2,7 @@ import { EnvironmentDescription } from '../data/environment/environment-descript
 import { BoxesCreatorService } from './boxes';
 import { CameraService } from './cameras';
 import { EngineService } from './engine.service';
+import { InputHandlerService } from './input';
 import { TriangleMesh3dCreatorService } from './meshes';
 import { WorldAxisService } from './orientation';
 import { SceneProvider } from './scenes';
@@ -18,6 +19,7 @@ export const gameServices = [
 	WindowRefService,
 	SceneProvider,
 	// WindowMock,
+	InputHandlerService,
 ];
 
 export const creatorServices = [
