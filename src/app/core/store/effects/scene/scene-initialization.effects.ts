@@ -4,9 +4,10 @@ import { tap } from 'rxjs/operators';
 import { SceneInitializationActions } from '../../actions';
 import { EngineService } from '../../../services/engine.service';
 import { CameraService } from '../../../services/cameras/camera.service';
-import { EnvironmentDescription } from '../../../data/environment/environment-description';
+import { EnvironmentInitializationService } from '../../../data/environment/environment-initialization.service';
 import { InputHandlerService } from '../../../services/input';
 import { ModelsData } from '../../../data/models';
+import { CharacterInitializationService } from '../../../services/initialization';
 
 @Injectable()
 export class SceneInitializationEffects {
@@ -23,18 +24,16 @@ export class SceneInitializationEffects {
 			this.engine.createScene(_action.payload);
 			this.engine.animate(_action.payload.scene);
 
-			await this.environmentService.initializeGround();
-			await this.environmentService.initializeCharacter();
-			await this.environmentService.initializeEnvironment();
-
-			// this.worldAxisService.showAxis(5, _action.payload.scene);
+			await this.environmentService.initializeAsync();
+			await this.characterService.initializeAsync();
 		}),
 	);
 
 	constructor(
 		private actions$: Actions,
 		private cameraService: CameraService,
-		private environmentService: EnvironmentDescription,
+		private characterService: CharacterInitializationService,
+		private environmentService: EnvironmentInitializationService,
 		private inputHandlerService: InputHandlerService,
 		private engine: EngineService) {}
 }

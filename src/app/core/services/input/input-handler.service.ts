@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { KeyboardKeyUpPayload } from '../../models/events';
 import { PeripheralInputActions } from '../../store/actions';
 import { AppState } from '../../store/state/app.state';
 import { SceneProvider } from '../scenes';
@@ -8,7 +9,7 @@ import { SceneProvider } from '../scenes';
 export class InputHandlerService {
 
 	constructor(
-		protected store$: Store<AppState>,
+		private store$: Store<AppState>,
 		private sceneProvider: SceneProvider) { }
 
 	public registerInputHandlers(): void {
@@ -16,13 +17,13 @@ export class InputHandlerService {
 			switch (kbInfo.type) {
 					case BABYLON.KeyboardEventTypes.KEYDOWN:
 						console.log('KEY DOWN: ', kbInfo.event.code);
-						const keyDownPayload = new PeripheralInputActions.KeyboardKeyDownAction({ keycode: kbInfo.event.code });
-						this.store$.dispatch(keyDownPayload);
+						const keyDownPayload = { keycode: kbInfo.event.code,  } as KeyboardKeyUpPayload;
+						this.store$.dispatch(new PeripheralInputActions.KeyboardKeyDownAction(keyDownPayload));
 						break;
 					case BABYLON.KeyboardEventTypes.KEYUP:
 						console.log('KEY UP: ', kbInfo.event.code);
-						const keyUpPayload = new PeripheralInputActions.KeyboardKeyUpAction({ keycode: kbInfo.event.code });
-						this.store$.dispatch(keyUpPayload);
+						const keyUpPayload = { keycode: kbInfo.event.code } as KeyboardKeyUpPayload;
+						this.store$.dispatch(new PeripheralInputActions.KeyboardKeyUpAction(keyUpPayload));
 						break;
 			}
 		});

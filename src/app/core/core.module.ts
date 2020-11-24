@@ -8,7 +8,7 @@ import { StoreDevtoolsModule, StoreDevtoolsOptions } from '@ngrx/store-devtools'
 
 import { environment } from '../../environments/environment.prod';
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import { creatorServices, gameServices } from './services';
+import { creatorServices, gameServices, providers } from './services';
 import { combinedReducers } from './store/reducers';
 import { effects } from './store/effects';
 
@@ -41,6 +41,7 @@ export class CoreModule {
 			ngModule: CoreModule,
 			providers: [
 				...gameServices,
+				...providers,
 				...creatorServices,
 			],
 		};

@@ -11,3 +11,6 @@ export * from './interaction/menu-interaction.actions';
 
 // input
 export * from './input/peripheral-input.actions';
+
+// positioning
+export * from './positioning/character-movement.actions';
