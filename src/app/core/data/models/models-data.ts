@@ -37,6 +37,14 @@ export class ModelsData {
 					modelPathPath: './assets/3d/characters/',
 					textureFilePath: './assets/3d/characters/male_character_texture.jpg',
 				} as ModelTexture);
+
+				this.modelTextureMap.set(
+					ModelType.Antenna,
+					{
+						modelFileName: 'radio-telescope.babylon',
+						modelPathPath: './assets/3d/antennas/',
+						textureFilePath: './assets/3d/antennas/_5_metalic_.png',
+					} as ModelTexture);
 		}
 	}
 }

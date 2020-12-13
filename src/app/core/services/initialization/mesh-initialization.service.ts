@@ -46,6 +46,15 @@ export class MeshInitializationService {
 		});
 	}
 
+	public async initializeAntenna(model: EnvironmentViewModel): Promise<void> {
+		const meshes = await this.getMeshesByModelType(model.modelType);
+		meshes.forEach(async mesh => {
+			mesh.position = model.position;
+			const material = await this.getTextureMaterialByModelType(model.modelType, this.sceneProvider.scene);
+			mesh.material = material;
+		});
+	}
+
 	public async getMeshByModelType(modelType: ModelType): Promise<AbstractMesh> {
 		const modelTextureMap = ModelsData.modelTextureMap.get(modelType);
 		const importResult = await SceneLoader.ImportMeshAsync(
@@ -59,6 +68,21 @@ export class MeshInitializationService {
 		}
 
 		return importResult.meshes[0];
+	}
+
+	public async getMeshesByModelType(modelType: ModelType): Promise<AbstractMesh[]> {
+		const modelTextureMap = ModelsData.modelTextureMap.get(modelType);
+		const importResult = await SceneLoader.ImportMeshAsync(
+			'',
+			modelTextureMap.modelPathPath,
+			modelTextureMap.modelFileName,
+			this.sceneProvider.scene);
+
+		if (importResult.meshes.length <= 1) {
+			throw new Error(`Not supported Exception. Unable to find more than 1 meshes.`);
+		}
+
+		return importResult.meshes;
 	}
 
 	public async getTextureMaterialByModelType(modelType: ModelType, scene: Scene): Promise<StandardMaterial> {

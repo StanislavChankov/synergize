@@ -5,4 +5,5 @@ export enum ModelType {
 	Palm1 = 100,
 	// Characters
 	CharacterMale1 = 500,
+	Antenna = 600,
 }

@@ -23,11 +23,13 @@ export class EnvironmentInitializationService {
 		environmentProvider.models = [
 			{ position: new Vector3(5, 0.6, 5), modelType: ModelType.BasicRock },
 			{ position: new Vector3(10, 0.6, 10), modelType: ModelType.Palm1 },
+			{ position: new Vector3(20, 0.6, 20), modelType: ModelType.Antenna },
 		] as Array<EnvironmentViewModel>;
 	}
 
 	public async initializeAsync(): Promise<void> {
 		await this.meshInitService.initializeGround(this.environmentProvider.ground);
 		await this.meshInitService.initializeEnvironment(this.environmentProvider.models);
+		await this.meshInitService.initializeAntenna(this.environmentProvider.models.find(m => m.modelType == ModelType.Antenna));
 	}
 }
