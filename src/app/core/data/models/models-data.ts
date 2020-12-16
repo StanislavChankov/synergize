@@ -1,8 +1,10 @@
 import { ModelType } from './model-type';
 import { ModelTexture } from './model-texture';
+import { MultiModelTexture, SubModelTexture } from './multi-model-texture';
 
 export class ModelsData {
 	static modelTextureMap: Map<ModelType, ModelTexture>;
+	static multiModelTextureMap: Array<MultiModelTexture>;
 	static initModelTexture(): void {
 		if (!ModelsData.modelTextureMap) {
 			ModelsData.modelTextureMap = new Map<ModelType, ModelTexture>();
@@ -41,10 +43,34 @@ export class ModelsData {
 				this.modelTextureMap.set(
 					ModelType.Antenna,
 					{
-						modelFileName: 'radio-telescope.babylon',
-						modelPathPath: './assets/3d/antennas/',
-						textureFilePath: './assets/3d/antennas/_5_metalic_.png',
+
 					} as ModelTexture);
+
+				this.multiModelTextureMap = [
+					{
+						modelType: ModelType.Antenna,
+						modelFileName: 'radio-telescope1.babylon',
+						modelPathPath: './assets/3d/antennas/',
+						subModelTextures: [
+							{
+								 subMeshId: 'Cube.038',
+								 subModelTextureFilePath: './assets/3d/antennas/el_station.png',
+							} as SubModelTexture,
+							{
+								subMeshId: 'Cube.030',
+								subModelTextureFilePath: './assets/3d/antennas/antenna_handler.png',
+							} as SubModelTexture,
+							{
+								subMeshId: 'Cube.058',
+								subModelTextureFilePath: './assets/3d/antennas/antenna_handler.png',
+							} as SubModelTexture,
+							{
+								subMeshId: 'Cylinder.022',
+								subModelTextureFilePath: './assets/3d/antennas/antenna.png',
+							} as SubModelTexture,
+						],
+					} as MultiModelTexture
+				];
 		}
 	}
 }

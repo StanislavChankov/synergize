@@ -39,19 +39,37 @@ export class MeshInitializationService {
 		}
 
 		models.forEach(async model => {
-			const mesh = await this.getMeshByModelType(model.modelType);
-			mesh.position = model.position;
-			const material = await this.getTextureMaterialByModelType(model.modelType, this.sceneProvider.scene);
-			mesh.material = material;
-		});
-	}
+			if (model.isMultiMeshModel) {
+				const modelTextureMap = ModelsData.multiModelTextureMap.find(m => m.modelType === model.modelType);
+				const importResult = await SceneLoader.ImportMeshAsync(
+					'',
+					modelTextureMap.modelPathPath,
+					modelTextureMap.modelFileName,
+					this.sceneProvider.scene);
 
-	public async initializeAntenna(model: EnvironmentViewModel): Promise<void> {
-		const meshes = await this.getMeshesByModelType(model.modelType);
-		meshes.forEach(async mesh => {
-			mesh.position = model.position;
-			const material = await this.getTextureMaterialByModelType(model.modelType, this.sceneProvider.scene);
-			mesh.material = material;
+					for (let i = 0; i < importResult.meshes.length; i++) {
+						const mesh = importResult.meshes[i];
+						const textureMaterial = await this.getTextureMaterialByMultiModelType(model.modelType, mesh.id, this.sceneProvider.scene);
+						mesh.material = textureMaterial || mesh.material;
+						if (mesh.id === "_radar___rotation_X_") {
+							window.setInterval(() => {
+								// mesh.rotation.x += 0.05;
+							}, 100);
+						}
+
+						if (mesh.id === "_radar___rotation_Z_") {
+							window.setInterval(() => {
+								mesh.rotation.y += 0.01;
+							}, 10);
+						}
+						// mesh.position = model.position;
+					}
+				} else {
+					const mesh = await this.getMeshByModelType(model.modelType);
+					mesh.position = model.position;
+					const material = await this.getTextureMaterialByModelType(model.modelType, this.sceneProvider.scene);
+					mesh.material = material;
+				}
 		});
 	}
 
@@ -90,6 +108,21 @@ export class MeshInitializationService {
 
 		const textureMaterial = new StandardMaterial('random', scene);
 		textureMaterial.diffuseTexture = new Texture(modelTextureMap.textureFilePath, scene);
+
+		return textureMaterial;
+	}
+
+	public async getTextureMaterialByMultiModelType(modelType: ModelType, meshId: string,scene: Scene): Promise<StandardMaterial | undefined> {
+		const multiModelTexture = ModelsData.multiModelTextureMap.find(m => m.modelType === modelType);
+
+		const model = multiModelTexture.subModelTextures.find(t => t.subMeshId === meshId);
+
+		if (!model) {
+			return undefined;
+		}
+
+		const textureMaterial = new StandardMaterial('random', scene);
+		textureMaterial.diffuseTexture = new Texture(model.subModelTextureFilePath, scene);
 
 		return textureMaterial;
 	}
